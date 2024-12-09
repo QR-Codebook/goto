@@ -3,10 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0; url=https://www.amazon.de">
-    <title>Weiterleitung...</title>
+    <title>E-Scooter Spiel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <p>Sie werden weitergeleitet. Falls dies nicht funktioniert, klicken Sie <a href="https://www.amazon.de">hier</a>.</p>
+
+    <main>
+        <h1>Spiele E-Scooter direkt auf dieser Seite!</h1>
+        
+        <div class="game-container">
+            <!-- Einbettungscode für das E-Scooter-Spiel -->
+            <iframe src="https://play.famobi.com/e-scooter" allowfullscreen="true"></iframe>
+        </div>
+
+        <div class="footer">
+            <p>Spiel bereitgestellt von <a href="https://famobi.com" target="_blank">Famobi</a>.</p>
+        </div>
+    </main>
+
 </body>
 </html>
