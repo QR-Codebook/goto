@@ -13,6 +13,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
         }
         
@@ -50,6 +51,23 @@
         a:hover {
             text-decoration: underline;
         }
+
+        .disclaimer {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .disclaimer a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .disclaimer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -65,6 +83,14 @@
         <div class="footer">
             <p>Spiel bereitgestellt von <a href="https://famobi.com" target="_blank">Famobi</a>.</p>
         </div>
+
+        <!-- Haftungsausschluss -->
+        <div class="disclaimer">
+            <p>Die Inhalte des hier eingebetteten Spiels werden von der externen Website <a href="https://famobi.com" target="_blank">Famobi.com</a> bereitgestellt. 
+            Wir haben keinen Einfluss auf die Inhalte, die Datenschutzpraktiken oder die Sicherheit der Zielseite. Die Verantwortung für die Inhalte der verlinkten Seite 
+            liegt ausschließlich bei deren Betreiber. Wir übernehmen keine Haftung für Schäden, die durch den Besuch oder die Nutzung der verlinkten Seite entstehen können.</p>
+        </div>
+
     </main>
 
 </body>
