@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bild anzeigen</title>
+    <title>Bild mittig zentrieren</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center; /* Horizontal zentrieren */
+            align-items: center; /* Vertikal zentrieren */
+            height: 100vh; /* Volle Bildschirmhöhe */
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        img {
+            max-width: 90%; /* Bild passt sich an */
+            max-height: 90vh; /* Bild bleibt sichtbar */
+        }
+    </style>
 </head>
 <body>
-    <img src="IMG_2561.JPG" alt="lesa">
+    <img src="IMG_2561.JPG" alt="Mein Bild">
 </body>
 </html>
-
