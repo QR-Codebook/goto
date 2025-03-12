@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lisa und Lea</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center; /* Horizontal zentrieren */
-            align-items: center; /* Vertikal zentrieren */
-            height: 100vh; /* Volle Bildschirmhöhe */
-            margin: 0;
-            background-color: #5d5d5d;
-        }
-        img {
-            max-width: 90%; /* Bild passt sich an */
-            max-height: 90vh; /* Bild bleibt sichtbar */
-        }
-    </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ehliX</title>
+  <link rel="stylesheet" type="text/css" href="ehlix.css">
 </head>
 <body>
-    <img src="IMG_2561.JPG" alt="lesa">
+  <div id="spruchContainer">
+    <p id="spruch">ehliX</p>     
+  </div>        
+
+  <script src="sprueche.js"></script>
+  <script src="bilderwechsel.js"></script>
+  <script>
+    // Funktion zum Anzeigen und Aktualisieren des zufälligen Spruchs
+    function anzeigenUndAktualisieren() {
+      const zufallsIndex = Math.floor(Math.random() * sprueche.length);
+      document.getElementById("spruch").innerText = sprueche[zufallsIndex];
+    }
+
+    // Aufruf der Funktion nach dem Laden der Sprüche
+    anzeigenUndAktualisieren();
+
+    // Automatisches Neuladen alle 5 Sekunden
+    setInterval(function () {
+      anzeigenUndAktualisieren();
+    }, 15000);
+  </script>
 </body>
 </html>
