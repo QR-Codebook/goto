@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=WindSong:wght@400;500&display=swap');
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #fff; /* Standard-Hintergrundfarbe */
+  /* transition: background-color 5s ease; /* Übergangseffekt für den Hintergrund über 2 Sekunden */
+  background-repeat: no-repeat; /* Hintergrundwiederholung verhindern */
+  background-size: cover; /* Bild an die Ränder des Bildschirms anpassen, ohne das Seitenverhältnis zu verzerren */
+  background-position: center; /* Bild in die Mitte des Bildschirms positionieren */
+}
+
+#spruchContainer {
+  display: inline-flex;
+  justify-content: center;
+  text-align: center;
+ /* background: rgba(255, 255, 255, 0.1); /* Glasiger Effekt mit Weiß und Transparenz (0.8) */
+ /* border-radius: 10px; /* Abgerundete Ecken für den Container */
+ /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Schatten für zusätzlichen Effekt */ 
+}
+
+
+#spruch {
+  font-family: "Rock Salt", cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 4em;
+  color: #95a398; /* Textfarbe */
+  text-shadow: 5px 5px 5px rgba(0.8, 0.8, 0.8, 0.8); /* Textschatten */
+}
+
+/*
+
+.splash-regular {
+  font-family: "Splash", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.windsong-regular {
+  font-family: "WindSong", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.windsong-medium {
+  font-family: "WindSong", cursive;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.rock-salt-regular {
+  font-family: "Rock Salt", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+*/
