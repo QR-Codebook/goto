@@ -24,7 +24,7 @@ body {
   font-weight: 400;
   font-style: normal;
   font-size: 4em;
-  color: #95a398;
+  color: #333; /* Dunkelgrau */
   text-shadow: 5px 5px 5px rgba(0.8, 0.8, 0.8, 0.8);
   word-wrap: break-word;
   max-width: 80%;
