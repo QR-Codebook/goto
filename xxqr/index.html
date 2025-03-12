@@ -9,7 +9,8 @@
 <body>
   <div id="spruchContainer">
     <p id="spruch">ehliX</p>     
-    <iframe width="1" height="1" src="https://www.youtube.com/embed/s7NJrKXWmM8?autoplay=1&loop=1&playlist=s7NJrKXWmM8" frameborder="0"></iframe>
+    <!-- Das YouTube-iframe wird jetzt versteckt und im Hintergrund abgespielt -->
+    <iframe id="background-music" src="https://www.youtube.com/embed/s7NJrKXWmM8?autoplay=1&loop=1&playlist=s7NJrKXWmM8" frameborder="0" style="position: absolute; width: 0; height: 0; visibility: hidden;"></iframe>
   </div>        
 
   <script src="sprueche.js"></script>
@@ -24,10 +25,11 @@
     // Aufruf der Funktion nach dem Laden der Sprüche
     anzeigenUndAktualisieren();
 
-    // Automatisches Neuladen alle 5 Sekunden
+    // Automatisches Neuladen alle 15 Sekunden
     setInterval(function () {
       anzeigenUndAktualisieren();
     }, 15000);
   </script>
 </body>
 </html>
+
