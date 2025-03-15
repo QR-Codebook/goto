@@ -30,6 +30,14 @@
             max-width: 300px;
             display: none;
             margin-top: 10px;
+            border: 5px solid gold; /* Goldener Rahmen */
+            border-radius: 10px;
+        }
+        #name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #333;
         }
     </style>
 </head>
@@ -43,16 +51,17 @@
         
         <br>
         <input type="text" id="textInput" placeholder="Text eingeben">
+        <input type="text" id="nameInput" placeholder="Name eingeben">
         <button onclick="saveText()">Text speichern</button>
         
         <h3>Gespeicherte Daten</h3>
         <img id="uploadedImage">
+        <p id="name"></p>
         <p id="savedText"></p>
         <button onclick="editText()">Text bearbeiten</button>
     </div>
 
     <script>
-        // Supabase Verbindung
         const SUPABASE_URL = "https://iwhraktqekgrncqucspx.supabase.co"; 
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -60,7 +69,6 @@
         let uploadedImageUrl = "";
         let textId = null;
 
-        // Bild hochladen
         async function uploadImage() {
             const file = document.getElementById("imageInput").files[0];
             if (!file) return alert("Bitte ein Bild auswählen!");
@@ -80,21 +88,21 @@
             }
         }
 
-        // Text speichern
         async function saveText() {
             const text = document.getElementById("textInput").value;
-            if (!text) return alert("Bitte Text eingeben!");
+            const name = document.getElementById("nameInput").value;
+            if (!text || !name) return alert("Bitte Text und Namen eingeben!");
 
             let response;
             if (textId) {
                 response = await supabase
                     .from("texts")
-                    .update({ text_content: text })
+                    .update({ text_content: text, name: name })
                     .eq("id", textId);
             } else {
                 response = await supabase
                     .from("texts")
-                    .insert([{ text_content: text }])
+                    .insert([{ text_content: text, name: name }])
                     .select();
             }
 
@@ -103,19 +111,25 @@
             } else {
                 textId = response.data[0].id;
                 document.getElementById("savedText").innerText = text;
+                document.getElementById("name").innerText = name;
                 alert("Text gespeichert!");
             }
         }
 
-        // Text bearbeiten
         function editText() {
             const newText = prompt("Neuen Text eingeben:", document.getElementById("savedText").innerText);
-            if (newText) {
+            const newName = prompt("Neuen Namen eingeben:", document.getElementById("name").innerText);
+            if (newText && newName) {
                 document.getElementById("textInput").value = newText;
+                document.getElementById("nameInput").value = newName;
                 saveText();
             }
         }
     </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
