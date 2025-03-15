@@ -73,6 +73,7 @@
             const file = document.getElementById("imageInput").files[0];
             if (!file) return alert("Bitte ein Bild auswählen!");
 
+            // Bild im Storage hochladen
             const { data, error } = await supabase
                 .storage
                 .from("images")
@@ -81,6 +82,7 @@
             if (error) {
                 console.error("Fehler beim Hochladen:", error.message);
             } else {
+                // Bild-URL erstellen
                 uploadedImageUrl = `${SUPABASE_URL}/storage/v1/object/public/images/${data.path}`;
                 document.getElementById("uploadedImage").src = uploadedImageUrl;
                 document.getElementById("uploadedImage").style.display = "block";
@@ -91,15 +93,17 @@
         async function saveText() {
             const text = document.getElementById("textInput").value;
             const name = document.getElementById("nameInput").value;
-            if (!text || !name) return alert("Bitte Text und Namen eingeben!");
+            if (!text || !name || !uploadedImageUrl) return alert("Bitte Text, Namen und Bild eingeben!");
 
             let response;
             if (textId) {
+                // Text und Bild-URL in der Tabelle updaten
                 response = await supabase
                     .from("texts")
                     .update({ text_content: text, name: name })
                     .eq("id", textId);
             } else {
+                // Neuen Eintrag in der Tabelle erstellen
                 response = await supabase
                     .from("texts")
                     .insert([{ text_content: text, name: name }])
@@ -110,9 +114,19 @@
                 console.error("Fehler beim Speichern:", response.error.message);
             } else {
                 textId = response.data[0].id;
+                
+                // Bild-URL in einer separaten Tabelle speichern
+                const { error: imageError } = await supabase
+                    .from("images")
+                    .insert([{ image_url: uploadedImageUrl, text_id: textId }]);
+
+                if (imageError) {
+                    console.error("Fehler beim Speichern der Bild-URL:", imageError.message);
+                }
+
                 document.getElementById("savedText").innerText = text;
                 document.getElementById("name").innerText = name;
-                alert("Text gespeichert!");
+                alert("Text und Bild gespeichert!");
             }
         }
 
@@ -126,10 +140,6 @@
             }
         }
     </script>
-
-</body>
-</html>
-
 
 </body>
 </html>
