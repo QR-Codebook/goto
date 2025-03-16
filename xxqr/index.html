@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <h1>Name speichernen</h1>
+    <h1>Name speichern</h1>
 
     <form id="nameForm">
         <input type="text" id="nameInput" placeholder="Name eingeben" required>
@@ -28,6 +28,7 @@
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+        // Name von der Datenbank laden
         async function fetchName() {
             let { data, error } = await supabase
                 .from("users")
@@ -44,6 +45,7 @@
             }
         }
 
+        // Name speichern, wenn das Formular abgeschickt wird
         document.getElementById("nameForm").addEventListener("submit", async function (event) {
             event.preventDefault();
             let name = document.getElementById("nameInput").value.trim();
@@ -52,8 +54,7 @@
 
             let { data, error } = await supabase
                 .from("users")
-                .insert([{ name }])
-                .select();
+                .insert([{ name }]);
 
             if (error) {
                 document.getElementById("errorMessage").innerText = "Fehler beim Speichern!";
