@@ -14,7 +14,13 @@ export default function NameForm() {
     }, []);
 
     async function fetchName() {
-        let { data, error } = await supabase.from("users").select("name").order("id", { ascending: false }).limit(1).single();
+        let { data, error } = await supabase
+            .from("users")
+            .select("name")
+            .order("id", { ascending: false })
+            .limit(1)
+            .single();
+
         if (error) console.error(error);
         else setSavedName(data?.name || "");
     }
@@ -42,7 +48,9 @@ export default function NameForm() {
                     className="border p-2 rounded"
                     placeholder="Name eingeben"
                 />
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded">Speichern</button>
+                <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+                    Speichern
+                </button>
             </form>
             {savedName && <p className="text-xl">Gespeicherter Name: {savedName}</p>}
         </div>
