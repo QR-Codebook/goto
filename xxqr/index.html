@@ -37,7 +37,7 @@
                 .single();
 
             if (error) {
-                document.getElementById("errorMessage").innerText = "Fehler beim Abrufen der Daten!";
+                document.getElementById("errorMessage").innerText = "Fehler beim Abrufen!";
                 console.error(error);
             } else {
                 document.getElementById("savedName").innerText = "Gespeicherter Name: " + (data?.name || "Kein Name gespeichert.");
@@ -45,30 +45,29 @@
         }
 
         document.getElementById("nameForm").addEventListener("submit", async function (event) {
-    event.preventDefault();
-    let name = document.getElementById("nameInput").value.trim();
+            event.preventDefault();
+            let name = document.getElementById("nameInput").value.trim();
 
-    if (name === "") return;
+            if (name === "") return;
 
-    let { data, error } = await supabase
-        .from("users")
-        .insert([{ name }])
-        .select(); // <-- Holt die gespeicherte Zeile direkt
+            let { data, error } = await supabase
+                .from("users")
+                .insert([{ name }])
+                .select();
 
-    if (error) {
-        document.getElementById("errorMessage").innerText = "Fehler beim Speichern!";
-        console.error(error);
-    } else {
-        document.getElementById("savedName").innerText = "Gespeicherter Name: " + data[0].name; // <-- Zeigt den neuen Namen direkt an
-        document.getElementById("nameInput").value = "";
-        document.getElementById("errorMessage").innerText = "";
-    }
-});
-
-
+            if (error) {
+                document.getElementById("errorMessage").innerText = "Fehler beim Speichern!";
+                console.error(error);
+            } else {
+                document.getElementById("savedName").innerText = "Gespeicherter Name: " + data[0].name;
+                document.getElementById("nameInput").value = "";
+                document.getElementById("errorMessage").innerText = "";
+            }
+        });
 
         fetchName();
     </script>
 
 </body>
 </html>
+
