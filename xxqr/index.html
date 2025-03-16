@@ -3,47 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supabase Verbindu</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Supabase Verbindungstet</title>
 </head>
 <body>
 
-    <h1>Verbindung zu Supabase</h1>
-    <p id="connectionStatus">Verbindung wird getestet...</p>
+    <h1>Supabase Verbindungstest</h1>
+    <p id="status">Verbindung wird überprüft...</p>
 
     <script>
-        // Deine Supabase URL und API Key
-        const supabaseUrl = "https://iwhraktqekgrncqucspx.supabase.co";
-        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
+        // Supabase-Daten
+        const url = "https://iwhraktqekgrncqucspx.supabase.co";
+        const key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
 
-        // Supabase Client erstellen
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // Supabase-Client initialisieren
+        const supabase = Supabase.createClient(url, key);
 
-        // Verbindung testen
-        async function testConnection() {
-            try {
-                // Eine einfache Anfrage an die Tabelle "users"
-                const { data, error } = await supabase
-                    .from("users")
-                    .select("*")
-                    .limit(1);
+        // Testabfrage
+        async function checkConnection() {
+            const { data, error } = await supabase.from('your_table_name').select('*');
+            
+            const statusElement = document.getElementById('status');
 
-                // Wenn keine Fehler auftreten
-                if (error) {
-                    document.getElementById("connectionStatus").innerText = "Fehler: " + error.message;
-                } else {
-                    document.getElementById("connectionStatus").innerText = "Erfolgreich verbunden!";
-                }
-            } catch (err) {
-                document.getElementById("connectionStatus").innerText = "Verbindung fehlgeschlagen: " + err.message;
+            if (error) {
+                statusElement.textContent = "Verbindung zur Datenbank fehlgeschlagen.";
+                console.error('Fehler:', error);
+            } else {
+                statusElement.textContent = "Erfolgreich mit der Datenbank verbunden!";
             }
         }
 
-        // Verbindung testen, wenn die Seite geladen wird
-        window.onload = testConnection;
+        // Verbindung überprüfen
+        checkConnection();
     </script>
 
 </body>
 </html>
-
 
