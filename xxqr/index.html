@@ -7,8 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .success { color: green; }
-        .error { color: red; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -27,30 +27,33 @@
         // Funktion, um Verbindung zu testen
         async function testConnection() {
             try {
+                // Versuche eine einfache SELECT-Anfrage auszuführen, um zu sehen, ob die Verbindung funktioniert
                 const { data, error } = await supabase
                     .from("users")
                     .select("*")
-                    .limit(1);
-                
+                    .limit(1);  // Wir holen nur die ersten 1 Datensatz, um die Verbindung zu testen.
+
                 if (error) {
-                    document.getElementById("connectionStatus").innerText = "Fehler bei der Verbindung zur Datenbank.";
+                    // Fehler bei der Verbindung
+                    document.getElementById("connectionStatus").innerText = "Nicht verbunden! Fehler: " + error.message;
                     document.getElementById("connectionStatus").className = "error";
-                    console.error(error);
                 } else {
+                    // Erfolgreiche Verbindung
                     document.getElementById("connectionStatus").innerText = "Erfolgreich mit der Datenbank verbunden!";
                     document.getElementById("connectionStatus").className = "success";
                 }
             } catch (err) {
-                document.getElementById("connectionStatus").innerText = "Fehler bei der Verbindung: " + err.message;
+                // Fehler bei der Verbindung
+                document.getElementById("connectionStatus").innerText = "Nicht verbunden! Fehler: " + err.message;
                 document.getElementById("connectionStatus").className = "error";
-                console.error(err);
             }
         }
 
-        // Verbindung testen, sobald die Seite geladen ist
+        // Test der Verbindung beim Laden der Seite
         window.onload = testConnection;
     </script>
 
 </body>
 </html>
+
 
