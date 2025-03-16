@@ -1,69 +1,69 @@
-import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name speichern</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        input, button { padding: 10px; margin: 5px; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
 
-const supabaseUrl = "https://iwhraktqekgrncqucspx.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
-const supabase = createClient(supabaseUrl, supabaseKey);
+    <h1>Name speichern</h1>
 
-export default function NameForm() {
-    const [name, setName] = useState("");
-    const [savedName, setSavedName] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    <form id="nameForm">
+        <input type="text" id="nameInput" placeholder="Name eingeben" required>
+        <button type="submit">Speichern</button>
+    </form>
 
-    useEffect(() => {
+    <p id="savedName">Lade gespeicherten Namen...</p>
+    <p id="errorMessage" class="error"></p>
+
+    <script>
+        const supabaseUrl = "https://iwhraktqekgrncqucspx.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function fetchName() {
+            let { data, error } = await supabase
+                .from("users")
+                .select("name")
+                .order("id", { ascending: false })
+                .limit(1)
+                .single();
+
+            if (error) {
+                document.getElementById("errorMessage").innerText = "Fehler beim Abrufen der Daten!";
+                console.error(error);
+            } else {
+                document.getElementById("savedName").innerText = "Gespeicherter Name: " + (data?.name || "Kein Name gespeichert.");
+            }
+        }
+
+        document.getElementById("nameForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            let name = document.getElementById("nameInput").value.trim();
+
+            if (name === "") return;
+
+            let { error } = await supabase.from("users").insert([{ name }]);
+
+            if (error) {
+                document.getElementById("errorMessage").innerText = "Fehler beim Speichern!";
+                console.error(error);
+            } else {
+                document.getElementById("savedName").innerText = "Gespeicherter Name: " + name;
+                document.getElementById("nameInput").value = "";
+                document.getElementById("errorMessage").innerText = "";
+            }
+        });
+
         fetchName();
-    }, []);
+    </script>
 
-    async function fetchName() {
-        const { data, error } = await supabase
-            .from("users")
-            .select("name")
-            .order("id", { ascending: false })
-            .limit(1)
-            .single();
-
-        if (error) {
-            console.error("Fehler beim Abrufen:", error.message);
-            setErrorMessage("Fehler beim Abrufen der Daten.");
-        } else {
-            setSavedName(data?.name || "");
-            setErrorMessage("");
-        }
-    }
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        if (name.trim() === "") return;
-
-        const { error } = await supabase.from("users").insert([{ name }]);
-
-        if (error) {
-            console.error("Fehler beim Speichern:", error.message);
-            setErrorMessage("Fehler beim Speichern des Namens.");
-        } else {
-            setSavedName(name);
-            setName("");
-            setErrorMessage("");
-        }
-    }
-
-    return (
-        <div className="flex flex-col items-center gap-4 p-6">
-            <h1 className="text-2xl font-bold">Name speichern</h1>
-            <form onSubmit={handleSubmit} className="flex gap-2">
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="border p-2 rounded"
-                    placeholder="Name eingeben"
-                />
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-                    Speichern
-                </button>
-            </form>
-            {savedName && <p className="text-xl">Gespeicherter Name: {savedName}</p>}
-            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-        </div>
-    );
-}
+</body>
+</html>
