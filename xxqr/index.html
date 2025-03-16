@@ -1,145 +1,50 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bild & Text Hochladen</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            text-align: center;
-            font-family: Arial, sans-serif;
+import { useState, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = "https://iwhraktqekgrncqucspx.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+export default function NameForm() {
+    const [name, setName] = useState("");
+    const [savedName, setSavedName] = useState("");
+
+    useEffect(() => {
+        fetchName();
+    }, []);
+
+    async function fetchName() {
+        let { data, error } = await supabase.from("users").select("name").order("id", { ascending: false }).limit(1).single();
+        if (error) console.error(error);
+        else setSavedName(data?.name || "");
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        if (name.trim() === "") return;
+
+        let { error } = await supabase.from("users").insert([{ name }]);
+        if (error) console.error(error);
+        else {
+            setSavedName(name);
+            setName("");
         }
-        #container {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        input, button {
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        img {
-            max-width: 300px;
-            display: none;
-            margin-top: 10px;
-            border: 5px solid gold; /* Goldener Rahmen */
-            border-radius: 10px;
-        }
-        #name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 10px;
-            color: #333;
-        }
-    </style>
-</head>
-<body>
+    }
 
-    <div id="container">
-        <h2>Bild & Text hochladen</h2>
-        
-        <input type="file" id="imageInput" accept="image/*">
-        <button onclick="uploadImage()">Bild hochladen</button>
-        
-        <br>
-        <input type="text" id="textInput" placeholder="Text eingeben">
-        <input type="text" id="nameInput" placeholder="Name eingeben">
-        <button onclick="saveText()">Text speichern</button>
-        
-        <h3>Gespeicherte Daten</h3>
-        <img id="uploadedImage">
-        <p id="name"></p>
-        <p id="savedText"></p>
-        <button onclick="editText()">Text bearbeiten</button>
-    </div>
-
-    <script>
-        const SUPABASE_URL = "https://iwhraktqekgrncqucspx.supabase.co"; 
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        let uploadedImageUrl = "";
-        let textId = null;
-
-        async function uploadImage() {
-            const file = document.getElementById("imageInput").files[0];
-            if (!file) return alert("Bitte ein Bild auswählen!");
-
-            // Bild im Storage hochladen
-            const { data, error } = await supabase
-                .storage
-                .from("images")
-                .upload(`uploads/${file.name}`, file, { upsert: true });
-
-            if (error) {
-                console.error("Fehler beim Hochladen:", error.message);
-            } else {
-                // Bild-URL erstellen
-                uploadedImageUrl = `${SUPABASE_URL}/storage/v1/object/public/images/${data.path}`;
-                document.getElementById("uploadedImage").src = uploadedImageUrl;
-                document.getElementById("uploadedImage").style.display = "block";
-                alert("Bild hochgeladen!");
-            }
-        }
-
-        async function saveText() {
-            const text = document.getElementById("textInput").value;
-            const name = document.getElementById("nameInput").value;
-            if (!text || !name || !uploadedImageUrl) return alert("Bitte Text, Namen und Bild eingeben!");
-
-            let response;
-            if (textId) {
-                // Text und Bild-URL in der Tabelle updaten
-                response = await supabase
-                    .from("texts")
-                    .update({ text_content: text, name: name })
-                    .eq("id", textId);
-            } else {
-                // Neuen Eintrag in der Tabelle erstellen
-                response = await supabase
-                    .from("texts")
-                    .insert([{ text_content: text, name: name }])
-                    .select();
-            }
-
-            if (response.error) {
-                console.error("Fehler beim Speichern:", response.error.message);
-            } else {
-                textId = response.data[0].id;
-                
-                // Bild-URL in einer separaten Tabelle speichern
-                const { error: imageError } = await supabase
-                    .from("images")
-                    .insert([{ image_url: uploadedImageUrl, text_id: textId }]);
-
-                if (imageError) {
-                    console.error("Fehler beim Speichern der Bild-URL:", imageError.message);
-                }
-
-                document.getElementById("savedText").innerText = text;
-                document.getElementById("name").innerText = name;
-                alert("Text und Bild gespeichert!");
-            }
-        }
-
-        function editText() {
-            const newText = prompt("Neuen Text eingeben:", document.getElementById("savedText").innerText);
-            const newName = prompt("Neuen Namen eingeben:", document.getElementById("name").innerText);
-            if (newText && newName) {
-                document.getElementById("textInput").value = newText;
-                document.getElementById("nameInput").value = newName;
-                saveText();
-            }
-        }
-    </script>
-
-</body>
-</html>
+    return (
+        <div className="flex flex-col items-center gap-4 p-6">
+            <h1 className="text-2xl font-bold">Name speichern</h1>
+            <form onSubmit={handleSubmit} className="flex gap-2">
+                <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="border p-2 rounded"
+                    placeholder="Name eingeben"
+                />
+                <button type="submit" className="bg-blue-500 text-white p-2 rounded">Speichern</button>
+            </form>
+            {savedName && <p className="text-xl">Gespeicherter Name: {savedName}</p>}
+        </div>
+    );
+}
