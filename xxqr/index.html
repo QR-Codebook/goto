@@ -3,75 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Name speichern</title>
+    <title>Supabase Verbindung Test</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        input, button { padding: 10px; margin: 5px; }
+        .success { color: green; }
         .error { color: red; }
     </style>
 </head>
 <body>
 
-    <h1>Name speichern</h1>
-
-    <form id="nameForm">
-        <input type="text" id="nameInput" placeholder="Name eingeben" required>
-        <button type="submit">Speichern</button>
-    </form>
-
-    <p id="savedName">Lade gespeicherten Namen...</p>
-    <p id="errorMessage" class="error"></p>
+    <h1>Supabase Verbindung Test</h1>
+    <p id="connectionStatus">Verbindung wird getestet...</p>
 
     <script>
+        // Deine Supabase URL und API Key
         const supabaseUrl = "https://iwhraktqekgrncqucspx.supabase.co";
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
+
+        // Supabase Client erstellen
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Name von der Datenbank laden
-        async function fetchName() {
-            let { data, error } = await supabase
-                .from("users")
-                .select("name")
-                .order("id", { ascending: false })
-                .limit(1)
-                .single();
-
-            if (error) {
-                document.getElementById("errorMessage").innerText = "Fehler beim Abrufen!";
-                console.error(error);
-            } else {
-                document.getElementById("savedName").innerText = "Gespeicherter Name: " + (data?.name || "Kein Name gespeichert.");
+        // Funktion, um Verbindung zu testen
+        async function testConnection() {
+            try {
+                const { data, error } = await supabase
+                    .from("users")
+                    .select("*")
+                    .limit(1);
+                
+                if (error) {
+                    document.getElementById("connectionStatus").innerText = "Fehler bei der Verbindung zur Datenbank.";
+                    document.getElementById("connectionStatus").className = "error";
+                    console.error(error);
+                } else {
+                    document.getElementById("connectionStatus").innerText = "Erfolgreich mit der Datenbank verbunden!";
+                    document.getElementById("connectionStatus").className = "success";
+                }
+            } catch (err) {
+                document.getElementById("connectionStatus").innerText = "Fehler bei der Verbindung: " + err.message;
+                document.getElementById("connectionStatus").className = "error";
+                console.error(err);
             }
         }
 
-        // Name speichern, wenn das Formular abgeschickt wird
-        document.getElementById("nameForm").addEventListener("submit", async function (event) {
-            event.preventDefault();
-            let name = document.getElementById("nameInput").value.trim();
-
-            if (name === "") return;
-
-            let { data, error } = await supabase
-                .from("users")
-                .insert([{ name }]);
-
-            if (error) {
-                document.getElementById("errorMessage").innerText = "Fehler beim Speichern!";
-                console.error(error);
-            } else {
-                document.getElementById("savedName").innerText = "Gespeicherter Name: " + data[0].name;
-                document.getElementById("nameInput").value = "";
-                document.getElementById("errorMessage").innerText = "";
-            }
-        });
-
-        fetchName();
+        // Verbindung testen, sobald die Seite geladen ist
+        window.onload = testConnection;
     </script>
-
-</body>
-</html>
-
 
 </body>
 </html>
