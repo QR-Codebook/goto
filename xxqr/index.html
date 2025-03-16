@@ -24,43 +24,35 @@
         // Supabase Client erstellen
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Funktion, um Verbindung zu testen
+        // Funktion zur Verbindungstests
         async function testConnection() {
             try {
-                // Versuche eine einfache SELECT-Anfrage auszuführen, um zu sehen, ob die Verbindung funktioniert
+                // Versuche eine einfache SELECT-Anfrage auszuführen
                 const { data, error } = await supabase
                     .from("users")
                     .select("*")
-                    .limit(1);  // Wir holen nur die ersten 1 Datensatz, um die Verbindung zu testen.
+                    .limit(1);  // Wir holen nur die ersten 1 Datensatz, um zu testen.
 
+                // Überprüfen, ob ein Fehler aufgetreten ist
                 if (error) {
-                    // Fehler bei der Verbindung
                     document.getElementById("connectionStatus").innerText = "Nicht verbunden! Fehler: " + error.message;
                     document.getElementById("connectionStatus").className = "error";
                 } else {
-                    // Erfolgreiche Verbindung
                     document.getElementById("connectionStatus").innerText = "Erfolgreich mit der Datenbank verbunden!";
                     document.getElementById("connectionStatus").className = "success";
                 }
             } catch (err) {
-                // Fehler bei der Verbindung
-                document.getElementById("connectionStatus").innerText = "Nicht verbunden! Fehler: " + err.message;
+                document.getElementById("connectionStatus").innerText = "Fehler bei der Verbindung: " + err.message;
                 document.getElementById("connectionStatus").className = "error";
             }
         }
 
-        // Test der Verbindung beim Laden der Seite
-        window.onload = function() {
-            // Setze initiale Nachricht auf "Verbindung wird getestet..."
-            document.getElementById("connectionStatus").innerText = "Verbindung wird getestet...";
-            // Teste die Verbindung
-            testConnection();
-        };
+        // Verbindungsprüfung bei Laden der Seite
+        window.onload = testConnection;
     </script>
 
 </body>
 </html>
 
-</html>
 
 
