@@ -50,17 +50,21 @@
 
     if (name === "") return;
 
-    let { error } = await supabase.from("users").insert([{ name }]);
+    let { data, error } = await supabase
+        .from("users")
+        .insert([{ name }])
+        .select(); // <-- Holt die gespeicherte Zeile direkt
 
     if (error) {
         document.getElementById("errorMessage").innerText = "Fehler beim Speichern!";
         console.error(error);
     } else {
+        document.getElementById("savedName").innerText = "Gespeicherter Name: " + data[0].name; // <-- Zeigt den neuen Namen direkt an
         document.getElementById("nameInput").value = "";
         document.getElementById("errorMessage").innerText = "";
-        fetchName();  // <--- NEU: Aktualisiert den Namen sofort
     }
 });
+
 
 
         fetchName();
