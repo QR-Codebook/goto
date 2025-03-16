@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supabase Verbindung Test</title>
+    <title>Supabase Verbindu</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .success { color: green; font-weight: bold; }
-        .error { color: red; font-weight: bold; }
-    </style>
 </head>
 <body>
 
-    <h1>Supabase Verbindung Test</h1>
+    <h1>Verbindung zu Supabase</h1>
     <p id="connectionStatus">Verbindung wird getestet...</p>
 
     <script>
@@ -21,38 +16,34 @@
         const supabaseUrl = "https://iwhraktqekgrncqucspx.supabase.co";
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3aHJha3RxZWtncm5jcXVjc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNDY2NzUsImV4cCI6MjA1NzYyMjY3NX0.M7PTaSkoa1phTgZa3Q7uVD3FIHG7C6wLh3Z5vWPCdKQ";
 
-        // Initialisiere Supabase Client
+        // Supabase Client erstellen
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Funktion zur Verbindungstests
+        // Verbindung testen
         async function testConnection() {
             try {
-                // Versuche eine einfache SELECT-Anfrage auszuführen
+                // Eine einfache Anfrage an die Tabelle "users"
                 const { data, error } = await supabase
                     .from("users")
                     .select("*")
-                    .limit(1);  // Wir holen nur die ersten 1 Datensatz, um zu testen.
+                    .limit(1);
 
-                // Überprüfen, ob ein Fehler aufgetreten ist
+                // Wenn keine Fehler auftreten
                 if (error) {
-                    document.getElementById("connectionStatus").innerText = "Nicht verbunden! Fehler: " + error.message;
-                    document.getElementById("connectionStatus").className = "error";
+                    document.getElementById("connectionStatus").innerText = "Fehler: " + error.message;
                 } else {
-                    document.getElementById("connectionStatus").innerText = "Erfolgreich mit der Datenbank verbunden!";
-                    document.getElementById("connectionStatus").className = "success";
+                    document.getElementById("connectionStatus").innerText = "Erfolgreich verbunden!";
                 }
             } catch (err) {
-                document.getElementById("connectionStatus").innerText = "Fehler bei der Verbindung: " + err.message;
-                document.getElementById("connectionStatus").className = "error";
+                document.getElementById("connectionStatus").innerText = "Verbindung fehlgeschlagen: " + err.message;
             }
         }
 
-        // Verbindungsprüfung bei Laden der Seite
+        // Verbindung testen, wenn die Seite geladen wird
         window.onload = testConnection;
     </script>
 
 </body>
 </html>
-
 
 
