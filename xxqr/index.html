@@ -45,22 +45,23 @@
         }
 
         document.getElementById("nameForm").addEventListener("submit", async function (event) {
-            event.preventDefault();
-            let name = document.getElementById("nameInput").value.trim();
+    event.preventDefault();
+    let name = document.getElementById("nameInput").value.trim();
 
-            if (name === "") return;
+    if (name === "") return;
 
-            let { error } = await supabase.from("users").insert([{ name }]);
+    let { error } = await supabase.from("users").insert([{ name }]);
 
-            if (error) {
-                document.getElementById("errorMessage").innerText = "Fehler beim Speichern!";
-                console.error(error);
-            } else {
-                document.getElementById("savedName").innerText = "Gespeicherter Name: " + name;
-                document.getElementById("nameInput").value = "";
-                document.getElementById("errorMessage").innerText = "";
-            }
-        });
+    if (error) {
+        document.getElementById("errorMessage").innerText = "Fehler beim Speichern!";
+        console.error(error);
+    } else {
+        document.getElementById("nameInput").value = "";
+        document.getElementById("errorMessage").innerText = "";
+        fetchName();  // <--- NEU: Aktualisiert den Namen sofort
+    }
+});
+
 
         fetchName();
     </script>
