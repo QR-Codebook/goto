@@ -8,32 +8,42 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export default function NameForm() {
     const [name, setName] = useState("");
     const [savedName, setSavedName] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         fetchName();
     }, []);
 
     async function fetchName() {
-        let { data, error } = await supabase
+        const { data, error } = await supabase
             .from("users")
             .select("name")
             .order("id", { ascending: false })
             .limit(1)
             .single();
 
-        if (error) console.error(error);
-        else setSavedName(data?.name || "");
+        if (error) {
+            console.error("Fehler beim Abrufen:", error.message);
+            setErrorMessage("Fehler beim Abrufen der Daten.");
+        } else {
+            setSavedName(data?.name || "");
+            setErrorMessage("");
+        }
     }
 
     async function handleSubmit(e) {
         e.preventDefault();
         if (name.trim() === "") return;
 
-        let { error } = await supabase.from("users").insert([{ name }]);
-        if (error) console.error(error);
-        else {
+        const { error } = await supabase.from("users").insert([{ name }]);
+
+        if (error) {
+            console.error("Fehler beim Speichern:", error.message);
+            setErrorMessage("Fehler beim Speichern des Namens.");
+        } else {
             setSavedName(name);
             setName("");
+            setErrorMessage("");
         }
     }
 
@@ -53,6 +63,7 @@ export default function NameForm() {
                 </button>
             </form>
             {savedName && <p className="text-xl">Gespeicherter Name: {savedName}</p>}
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         </div>
     );
 }
